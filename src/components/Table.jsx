@@ -1,4 +1,5 @@
 import React,{useEffect,useState} from 'react'
+import axios from 'axios';
 
 function Table() {
   const [data, setData] = useState([]);
@@ -10,9 +11,12 @@ function Table() {
   }, []);
 
   const fetchData = async () => {
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts');
-    const jsonData = await response.json();
-    setData(jsonData);
+    try {
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
+        setData(response.data);
+      } catch (error) {
+        console.log(error);
+      }
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
