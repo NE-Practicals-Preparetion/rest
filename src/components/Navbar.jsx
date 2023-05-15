@@ -1,7 +1,13 @@
 import React from 'react'
 import { Link } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 function Navbar() {
+    const history = useHistory();
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        // history.push('/login');
+      };
   return (
     <header className='grid grid-cols-2 md:grid-cols-5 justify-between items-center mb-2'>
         <div className='flex items-center'>
@@ -18,7 +24,7 @@ function Navbar() {
             </div>
         </div>
 
-        <div className='flex justify-end text-gray-500 font-black pr-2'>
+        <div className='flex justify-end text-gray-500 font-black pr-2' onClick={handleLogout}>
             <Link to="/login">Logout</Link>
         </div>
 
