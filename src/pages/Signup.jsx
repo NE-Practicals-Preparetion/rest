@@ -1,38 +1,95 @@
 import { useState } from 'react';
 import axios from 'axios';
+import API_URL from '../utils/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+    const navigate = useNavigate();
     const [fullName, setFullName] = useState('');
     const [nationalId, setNationalId] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-  
+    const [loading, setLoading] = useState(false);
+
     const handleSubmit = async (e) => {
       e.preventDefault();
-      if (password !== confirmPassword) {
-        console.log("Passwords don't match");
+      if (!fullName || !nationalId || !phone || !password || !email || !confirmPassword ) {
+        toast("Provide all fields",{
+          position: "top-right",
+          hideProgressBar : false,
+          // theme: "dark",
+          type: "error",
+          closeOnClick: true,
+        })
         return;
       }
+      if (password !== confirmPassword) {
+          toast("Passwords don't match",{
+            position: "top-right",
+            hideProgressBar : false,
+            // theme: "dark",
+            type: "error",
+            closeOnClick: true,
+          })
+        return;
+      }
+      setLoading(true);
       try {
-        const response = await axios.post('https://example.com/api/signup', {
-          fullName,
-          nationalId,
+        const response = await axios.post(API_URL+'/user/register/admin', {
+          names: fullName,
+          phoneNumber: phone,
           email,
-          phone,
           password,
+          nationalID: nationalId,
         });
-        const token = response.data.token;
-        localStorage.setItem('token', token);
-        // Redirect to dashboard or perform other actions
+        if (response?.data?.message === 'user created successfully') {
+          toast("Successfully created your account",{
+            position: "top-right",
+            hideProgressBar : false,
+            // theme: "dark",
+            type: "success",
+            closeOnClick: true,
+          })
+          setEmail('');
+          setPassword('');
+          setNationalId('');
+          setFullName('');
+          setConfirmPassword('');
+          setPhone('');
+    
+          setLoading(false);
+          //redirect to login
+          navigate('/login');
+        }
+        else{
+          toast(response?.data?.message,{
+            position: "top-right",
+            hideProgressBar : false,
+            // theme: "dark",
+            type: "error",
+            closeOnClick: true,
+          })
+        }
       } catch (error) {
-        console.log('Signup failed', error);
+        console.log('catch error', error);
+        setLoading(false);
+        toast(error?.message || "An error occured",{
+          position: "top-right",
+          hideProgressBar : false,
+          // theme: "dark",
+          type: "error",
+          closeOnClick: true,
+        })
       }
     };
 
   return (
     <div className='pb-12'>
+      <ToastContainer/>
       <h1 className='text-xl text-[#092468] font-black text-center my-12'>App Title</h1>
       <div className="flex flex-col items-center mt-8 border w-[35vw] mx-auto py-8 px-16">
         <h1 className='font-black text-black mb-4 text-xl'>Create account</h1>
@@ -101,7 +158,7 @@ const Signup = () => {
           <button
             type="submit"
             className="w-[70%] mb-6 flex justify-center mx-auto text-sm px-4 py-3 text-white bg-blue-800 rounded-3xl hover:bg-blue-700"
-            style={{ backgroundColor: '#092468' }}>Signup</button>
+            style={{ backgroundColor: '#092468' }}>{loading ? 'Creating account...' : 'Signup'}</button>
         </form>
         <p className="mt-4 text-sm">
           Already have an account? <a className='text-[#092468] font-bold' href="/login">Signin</a>.

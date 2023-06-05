@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link } from "react-router-dom";
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
-    const history = useHistory();
+    const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.removeItem('token');
-        // history.push('/login');
+        navigate('/login');
       };
   return (
     <header className='grid grid-cols-2 md:grid-cols-5 justify-between items-center mb-2'>
