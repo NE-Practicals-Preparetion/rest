@@ -109,6 +109,8 @@ function Table() {
     );
   };
 
+  // console.log(data)
+
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -141,7 +143,7 @@ function Table() {
                 {/* <td className="px-4 py-2">{item.id}</td> */}
                 <td className="px-4 py-2">{item.modelName}</td>
                 <td className="px-4 py-2">{item.price}</td>
-                <td className="px-4 py-2">{item.owner.names}</td>
+                <td className="px-4 py-2">{item?.owner?.names}</td>
                 <td className="px-4 py-2">{item.manufactureYear}</td>
                 <td className="px-4 py-2">{item.manufactureCompany}</td>
                 <td className="px-4 py-2">
@@ -168,6 +170,7 @@ function Table() {
               <input
                 type="text"
                 value={selectedItem.modelName}
+                placeholder='Model Name'
                 onChange={(e) =>
                   setSelectedItem({ ...selectedItem, modelName: e.target.value })
                 }
@@ -176,18 +179,21 @@ function Table() {
               <input
                 type="text"
                 value={selectedItem.price}
+                placeholder='Price'
                 onChange={(e) => setSelectedItem({ ...selectedItem, price: e.target.value })}
                 className="border border-gray-300 rounded px-2 py-2"
               />
               <input
                 type="text"
-                value={selectedItem.owner.names}
+                value={selectedItem?.owner?.names}
+                placeholder='Owner'
                 onChange={(e) => setSelectedItem({ ...selectedItem, owner: e.target.value })}
                 className="border border-gray-300 rounded px-2 py-2"
               />
               <input
                 type="text"
                 value={selectedItem.manufactureYear}
+                placeholder='Manufacture Year'
                 onChange={(e) =>
                   setSelectedItem({ ...selectedItem, manufactureYear: e.target.value })
                 }
@@ -196,6 +202,7 @@ function Table() {
               <input
                 type="text"
                 value={selectedItem.manufactureCompany}
+                placeholder='Manufacture Company'
                 onChange={(e) =>
                   setSelectedItem({ ...selectedItem, manufactureCompany: e.target.value })
                 }

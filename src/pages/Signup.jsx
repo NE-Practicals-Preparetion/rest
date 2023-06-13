@@ -39,7 +39,7 @@ const Signup = () => {
       }
       setLoading(true);
       try {
-        const response = await axios.post(API_URL+'/user/register/admin', {
+        const response = await axios.post(API_URL+'/user/register', {
           names: fullName,
           phoneNumber: phone,
           email,
