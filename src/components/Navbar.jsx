@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
+    //redirection and removing token from local storage when logging out
     const navigate = useNavigate();
     const handleLogout = () => {
         localStorage.removeItem('token');

@@ -1,38 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import API_URL from '../utils/api';
+import { API_URL, config } from '../utils/api';
 
 function Table() {
   const [data, setData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);   //page number to start from 1
+  const [itemsPerPage] = useState(10);    //number of items per page to be 10
   const [selectedItem, setSelectedItem] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-
-  let config = {
-    headers: {
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    },
-  };
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  // Fetch data from the API
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/vehicle/${currentPage}/${itemsPerPage}`,config);
-      // console.log(response,"response");
-      setData(response?.data?.data?.vehicles);
+      const response = await axios.get(`${API_URL}/vehicle/${currentPage}/${itemsPerPage}`, config);
+      setData(response?.data?.data?.vehicles);   //populate the data array with the response data
     } catch (error) {
       console.log(error);
     }
   };
 
+  // Handle edit action for an item
   const handleEdit = (item) => {
     setSelectedItem(item);
   };
 
+  // Handle delete action for an item
   const handleDelete = async (itemId) => {
     try {
       await axios.delete(`${API_URL}/vehicle/${itemId}`);
@@ -42,13 +38,14 @@ function Table() {
     }
   };
 
+  // Close the editing modal
   const handleModalClose = () => {
     setSelectedItem(null);
   };
 
+  // Save the changes made to an item
   const handleSave = async (updatedItem) => {
     try {
-      // Make an API request to save/update the item's data
       const response = await axios.put(`${API_URL}/vehicle/${updatedItem.id}`, updatedItem);
       const updatedData = data.map((item) => (item.id === updatedItem.id ? response.data : item));
       setData(updatedData);
@@ -58,22 +55,27 @@ function Table() {
     }
   };
 
+  // Open the new car popup
   const handlePopupOpen = () => {
     setShowPopup(true);
   };
 
+  // Close the new car popup
   const handlePopupClose = () => {
     setShowPopup(false);
   };
 
+  // Handle addition of a new car
   const handleCarAdded = (newCar) => {
     setData([newCar, ...data]);
     handlePopupClose();
   };
 
+  // Render the pagination buttons
   const renderPagination = () => {
     const pageNumbers = Math.ceil(data.length / itemsPerPage);
 
+    // Handle page change
     const handlePageChange = (pageNumber) => {
       setCurrentPage(pageNumber);
     };
@@ -109,8 +111,6 @@ function Table() {
     );
   };
 
-  // console.log(data)
-
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -128,7 +128,6 @@ function Table() {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-[#EDEEF3] h-12">
-              {/* <th className="text-[#092468] px-4 py-2">ID</th> */}
               <th className="text-[#092468] px-4 py-2 text-start">Model Name</th>
               <th className="text-[#092468] px-4 py-2 text-start">Price</th>
               <th className="text-[#092468] px-4 py-2 text-start">Owner</th>
@@ -138,9 +137,8 @@ function Table() {
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
-              <tr className="bg-[#434343] bg-opacity-[3%] border border-gray-100" key={item.id}>
-                {/* <td className="px-4 py-2">{item.id}</td> */}
+            {data.map((item, i) => (
+              <tr className="bg-[#434343] bg-opacity-[3%] border border-gray-100" key={i}>
                 <td className="px-4 py-2">{item.modelName}</td>
                 <td className="px-4 py-2">{item.price}</td>
                 <td className="px-4 py-2">{item?.owner?.names}</td>
@@ -170,7 +168,7 @@ function Table() {
               <input
                 type="text"
                 value={selectedItem.modelName}
-                placeholder='Model Name'
+                placeholder="Model Name"
                 onChange={(e) =>
                   setSelectedItem({ ...selectedItem, modelName: e.target.value })
                 }
@@ -179,21 +177,21 @@ function Table() {
               <input
                 type="text"
                 value={selectedItem.price}
-                placeholder='Price'
+                placeholder="Price"
                 onChange={(e) => setSelectedItem({ ...selectedItem, price: e.target.value })}
                 className="border border-gray-300 rounded px-2 py-2"
               />
               <input
                 type="text"
                 value={selectedItem?.owner?.names}
-                placeholder='Owner'
+                placeholder="Owner"
                 onChange={(e) => setSelectedItem({ ...selectedItem, owner: e.target.value })}
                 className="border border-gray-300 rounded px-2 py-2"
               />
               <input
                 type="text"
                 value={selectedItem.manufactureYear}
-                placeholder='Manufacture Year'
+                placeholder="Manufacture Year"
                 onChange={(e) =>
                   setSelectedItem({ ...selectedItem, manufactureYear: e.target.value })
                 }
@@ -202,7 +200,7 @@ function Table() {
               <input
                 type="text"
                 value={selectedItem.manufactureCompany}
-                placeholder='Manufacture Company'
+                placeholder="Manufacture Company"
                 onChange={(e) =>
                   setSelectedItem({ ...selectedItem, manufactureCompany: e.target.value })
                 }

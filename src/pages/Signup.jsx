@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import axios from 'axios';
-import API_URL from '../utils/api';
+import {API_URL} from '../utils/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+  //form inputs states
     const navigate = useNavigate();
     const [fullName, setFullName] = useState('');
     const [nationalId, setNationalId] = useState('');
@@ -15,8 +16,10 @@ const Signup = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
+    //handling form submit
     const handleSubmit = async (e) => {
       e.preventDefault();
+      //check if all fields are provided
       if (!fullName || !nationalId || !phone || !password || !email || !confirmPassword ) {
         toast("Provide all fields",{
           position: "top-right",
@@ -27,6 +30,7 @@ const Signup = () => {
         })
         return;
       }
+      //check if passwords match
       if (password !== confirmPassword) {
           toast("Passwords don't match",{
             position: "top-right",
@@ -44,6 +48,7 @@ const Signup = () => {
           phoneNumber: phone,
           email,
           password,
+          reEnterPassword:confirmPassword,
           nationalID: nationalId,
         });
         if (response?.data?.message === 'user created successfully') {
@@ -54,6 +59,7 @@ const Signup = () => {
             type: "success",
             closeOnClick: true,
           })
+          //clear form inputs
           setEmail('');
           setPassword('');
           setNationalId('');

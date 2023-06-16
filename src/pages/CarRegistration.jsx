@@ -7,6 +7,7 @@ function CarRegistration() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token")
   useEffect(()=>{
+    //redirect to login form when no token found
     if(!token){
       navigate('/login');
     }

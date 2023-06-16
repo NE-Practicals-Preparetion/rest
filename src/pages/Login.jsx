@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import axios from 'axios';
-import API_URL from '../utils/api';
+import {API_URL} from '../utils/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  //form inputs states
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false)
 
+  //handling form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //check if all fields are provided
     if (!email || !password) {
       toast("Provide all fields",{
         position: "top-right",
@@ -31,8 +34,9 @@ const Login = () => {
       });
       const token = response?.data?.token;
       // console.log(token,"token")
-      localStorage.setItem('token', token);
+      localStorage.setItem('token', token);   //store token in local storage
       if (token) {
+        //clear form inputs
         setEmail('');
         setPassword('');
   
