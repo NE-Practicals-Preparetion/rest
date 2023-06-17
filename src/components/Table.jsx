@@ -16,7 +16,8 @@ function Table() {
   // Fetch data from the API
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/vehicle/${currentPage}/${itemsPerPage}`, config);
+      // const response = await axios.get(`${API_URL}/vehicle/${currentPage}/${itemsPerPage}`, config);
+      const response = await axios.get(`${API_URL}/vehicle/all`, config);
       setData(response?.data?.data?.vehicles);   //populate the data array with the response data
       // console.log(response,"lengthhh")
     } catch (error) {
