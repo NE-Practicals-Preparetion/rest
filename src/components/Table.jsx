@@ -5,19 +5,20 @@ import { API_URL, config } from '../utils/api';
 function Table() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);   //page number to start from 1
-  const [itemsPerPage] = useState(10);    //number of items per page to be 10
+  const [itemsPerPage] = useState(3);    //number of items per page to be 3
   const [selectedItem, setSelectedItem] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [currentPage]);
 
   // Fetch data from the API
   const fetchData = async () => {
     try {
       const response = await axios.get(`${API_URL}/vehicle/${currentPage}/${itemsPerPage}`, config);
       setData(response?.data?.data?.vehicles);   //populate the data array with the response data
+      // console.log(response,"lengthhh")
     } catch (error) {
       console.log(error);
     }
@@ -67,7 +68,7 @@ function Table() {
 
   // Handle addition of a new car
   const handleCarAdded = (newCar) => {
-    setData([newCar, ...data]);
+    setData([...data, newCar]);
     handlePopupClose();
   };
 
@@ -124,7 +125,7 @@ function Table() {
           New Car
         </button>
       </div>
-      <div className="container mx-auto mt-2">
+      <div className="overflow-x-auto max-w-full md:mx-auto mt-2">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-[#EDEEF3] h-12">
@@ -137,24 +138,27 @@ function Table() {
             </tr>
           </thead>
           <tbody>
-            {data.map((item, i) => (
-              <tr className="bg-[#434343] bg-opacity-[3%] border border-gray-100" key={i}>
-                <td className="px-4 py-2">{item.modelName}</td>
-                <td className="px-4 py-2">{item.price}</td>
-                <td className="px-4 py-2">{item?.owner?.names}</td>
-                <td className="px-4 py-2">{item.manufactureYear}</td>
-                <td className="px-4 py-2">{item.manufactureCompany}</td>
-                <td className="px-4 py-2">
-                  <button className="text-blue-500 underline mr-2" onClick={() => handleEdit(item)}>
-                    Edit
-                  </button>
-                  <button className="text-red-500 underline" onClick={() => handleDelete(item.id)}>
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {data
+              .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+              .map((item, i) => (
+                <tr className="bg-[#434343] bg-opacity-[3%] border border-gray-100" key={i}>
+                  <td className="px-4 py-2">{item.modelName}</td>
+                  <td className="px-4 py-2">{item.price}</td>
+                  <td className="px-4 py-2">{item?.owner?.names}</td>
+                  <td className="px-4 py-2">{item.manufactureYear}</td>
+                  <td className="px-4 py-2">{item.manufactureCompany}</td>
+                  <td className="px-4 py-2">
+                    <button className="text-blue-500 underline mr-2" onClick={() => handleEdit(item)}>
+                      Edit
+                    </button>
+                    <button className="text-red-500 underline" onClick={() => handleDelete(item.id)}>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
+
         </table>
         {renderPagination()}
       </div>

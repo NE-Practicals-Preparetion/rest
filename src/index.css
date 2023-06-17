@@ -13,4 +13,12 @@ body{
   padding: 0 4em;
   box-sizing: border-box;
   font-family: 'poppins';
+  overflow-x: hidden !important;
+}
+
+/* the padding should be 0.4 when in mobile */
+@media (max-width: 768px) {
+  body{
+    padding: 0.5em;
+  }
 }
