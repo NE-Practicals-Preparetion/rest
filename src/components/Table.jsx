@@ -7,6 +7,7 @@ function Table() {
   const [currentPage, setCurrentPage] = useState(1);   //page number to start from 1
   const [itemsPerPage] = useState(3);    //number of items per page to be 3
   const [selectedItem, setSelectedItem] = useState(null);
+  const [pageNumbers, setPageNumbers] = useState(1);  //number of pages to start from 1
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
@@ -16,10 +17,10 @@ function Table() {
   // Fetch data from the API
   const fetchData = async () => {
     try {
-      // const response = await axios.get(`${API_URL}/vehicle/${currentPage}/${itemsPerPage}`, config);
-      const response = await axios.get(`${API_URL}/vehicle/all`, config);
-      setData(response?.data?.data?.vehicles);   //populate the data array with the response data
-      // console.log(response,"lengthhh")
+      const response = await axios.get(`${API_URL}/vehicle/${currentPage}/${itemsPerPage}`, config);
+      console.log(response,"response")
+      setData(response?.data?.data?.vehicles);   //populate the data array with the response data vehicles
+      setPageNumbers(response?.data?.data?.totalPages);  //populate the pageNumbers array with the response data total pages
     } catch (error) {
       console.log(error);
     }
@@ -75,7 +76,7 @@ function Table() {
 
   // Render the pagination buttons
   const renderPagination = () => {
-    const pageNumbers = Math.ceil(data.length / itemsPerPage);
+    // const pageNumbers = Math.ceil(data.length / itemsPerPage);
 
     // Handle page change
     const handlePageChange = (pageNumber) => {
@@ -86,7 +87,7 @@ function Table() {
       <div className="flex justify-center my-4 text-sm">
         {currentPage > 1 && (
           <button
-            className="px-3 py-1 bg-[#092468] text-white rounded"
+            className="px-3 py-1 bg-[#4370e1] text-white rounded"
             onClick={() => handlePageChange(currentPage - 1)}
           >
             Prev
@@ -103,7 +104,7 @@ function Table() {
         ))}
         {currentPage < pageNumbers && (
           <button
-            className="rounded px-3 py-1 bg-[#092468] text-white"
+            className="rounded px-3 py-1 bg-[#4370e1] text-white"
             onClick={() => handlePageChange(currentPage + 1)}
           >
             Next
@@ -140,9 +141,9 @@ function Table() {
           </thead>
           <tbody>
             {data
-              .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-              .map((item, i) => (
-                <tr className="bg-[#434343] bg-opacity-[3%] border border-gray-100" key={i}>
+              // .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+              .map((item) => (
+                <tr className="bg-[#434343] bg-opacity-[3%] border border-gray-100" key={item._id}>
                   <td className="px-4 py-2">{item.modelName}</td>
                   <td className="px-4 py-2">{item.price}</td>
                   <td className="px-4 py-2">{item?.owner?.names}</td>
