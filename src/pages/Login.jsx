@@ -56,7 +56,7 @@ const Login = () => {
     } catch (error) {
       console.log('catch error', error);
       setLoading(false);
-      toast(error?.message || "An error occured",{
+      toast(error?.response?.data?.message || "An error occured",{
         position: "top-right",
         hideProgressBar : false,
         // theme: "dark",

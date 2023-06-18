@@ -1,4 +1,4 @@
-import React, { useState,useRef } from 'react';
+import React, { useState,useRef,useEffect } from 'react';
 import axios from 'axios';
 import {API_URL,config} from '../utils/api';
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,8 +13,42 @@ const CarPost = () => {
   const [manufactureCompany, setManufactureCompany] = useState('');
   const [chasisNumber, setChasisNumber] = useState('');
   const [loading, setLoading] = useState(false);
+  const [owners, setOwners] = useState([]); // State for storing owners
+  const [selectedOwner, setSelectedOwner] = useState('');
 
   const fileInputRef = useRef(null);  // Create a reference to the file input element
+
+  // Fetch owners from the API
+  useEffect(() => {
+    const fetchOwners = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/owner`,config);
+        // console.log(response,"re")
+        if (response.data.success) {
+          setOwners(response.data.data);
+        } else {
+          toast.error('Failed to fetch owners');
+        }
+      } catch (error) {
+        toast.error('An error occurred while fetching owners');
+      }
+    };
+
+    fetchOwners();
+  }, []);
+
+  // Render the owner options for the dropdown
+  const renderOwnerOptions = () => {
+    return owners.map((owner) => (
+      <option key={owner._id} value={owner._id}>
+        {owner.names}
+      </option>
+    ));
+  };
+
+  const handleOwnerChange = (e) => {
+    setSelectedOwner(e.target.value);
+  };
 
   //handle submit form
   const handleSubmit = async (e) => {
@@ -36,7 +70,8 @@ const CarPost = () => {
       formData.append('modelName', modelName); // Add modelName to formData
       formData.append('vehiclePlateNumber', plateNbr); // Add plate nbr to formData
       formData.append('chasisNumber', chasisNumber); // Add chasis nbr to formData
-      formData.append('owner', '648f38a95e4184c4e48795e8'); // Add owner to formData
+      // formData.append('owner', '648f38a95e4184c4e48795e8'); // Add owner to formData
+      formData.append('owner', selectedOwner); // Add owner to formData
 
       const response = await axios.post(`${API_URL}/vehicle`, formData, config); // Send the form data as multipart/form-data
       if (response.data.success) {
@@ -53,7 +88,7 @@ const CarPost = () => {
         toast.error('Car registration failed');
       }
     } catch (error) {
-      toast.error('An error occurred');
+      toast.error(error?.response?.data?.message || 'An error occurred');
     }
 
     setLoading(false);
@@ -158,6 +193,17 @@ const CarPost = () => {
           value={manufactureCompany}
           onChange={(e) => setManufactureCompany(e.target.value)}
         />
+      </div>
+      <div className="mb-6">
+        <select
+          id="owner"
+          className="w-full px-4 py-3 mt-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 placeholder-black text-sm"
+          value={selectedOwner}
+          onChange={handleOwnerChange}
+        >
+          <option value="">Select Owner</option>
+          {renderOwnerOptions()}
+        </select>
       </div>
       <div className="mb-6">
         <input

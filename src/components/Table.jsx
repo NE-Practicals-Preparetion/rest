@@ -5,7 +5,7 @@ import { API_URL, config } from '../utils/api';
 function Table() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);   //page number to start from 1
-  const [itemsPerPage] = useState(1);    //number of items per page to be 3
+  const [itemsPerPage] = useState(2);    //number of items per page to be 3
   const [selectedItem, setSelectedItem] = useState(null);
   const [pageNumbers, setPageNumbers] = useState(1);  //number of pages to start from 1
   const [showPopup, setShowPopup] = useState(false);
