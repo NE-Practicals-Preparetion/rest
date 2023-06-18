@@ -11,6 +11,7 @@ const CarPost = () => {
   const [plateNbr, setPlateNbr] = useState('');
   const [manufactureYear, setManufactureYear] = useState('');
   const [manufactureCompany, setManufactureCompany] = useState('');
+  const [chasisNumber, setChasisNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
   const fileInputRef = useRef(null);  // Create a reference to the file input element
@@ -34,8 +35,8 @@ const CarPost = () => {
       formData.append('price', price); // Add price to formData
       formData.append('modelName', modelName); // Add modelName to formData
       formData.append('vehiclePlateNumber', plateNbr); // Add plate nbr to formData
-      formData.append('chasisNumber', "1234988"); // Add chasis nbr to formData
-      formData.append('owner', '648c1f44eacf8653b61635e4'); // Add owner to formData
+      formData.append('chasisNumber', chasisNumber); // Add chasis nbr to formData
+      formData.append('owner', '648f38a95e4184c4e48795e8'); // Add owner to formData
 
       const response = await axios.post(`${API_URL}/vehicle`, formData, config); // Send the form data as multipart/form-data
       if (response.data.success) {
@@ -46,6 +47,7 @@ const CarPost = () => {
         setPlateNbr('');
         setManufactureYear('');
         setManufactureCompany('');
+        setChasisNumber('')
         fileInputRef.current.value = '';
       } else {
         toast.error('Car registration failed');
@@ -125,6 +127,16 @@ const CarPost = () => {
           placeholder="Plate number"
           value={plateNbr}
           onChange={(e) => setPlateNbr(e.target.value)}
+        />
+      </div>
+      <div className="mb-6">
+        <input
+          type="text"
+          id="chasisNumber"
+          className="w-full px-4 py-3 mt-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 placeholder-black text-sm"
+          placeholder="Chasis number"
+          value={chasisNumber}
+          onChange={(e) => setChasisNumber(e.target.value)}
         />
       </div>
       <div className="mb-6">

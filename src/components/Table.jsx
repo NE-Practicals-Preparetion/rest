@@ -5,7 +5,7 @@ import { API_URL, config } from '../utils/api';
 function Table() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);   //page number to start from 1
-  const [itemsPerPage] = useState(3);    //number of items per page to be 3
+  const [itemsPerPage] = useState(1);    //number of items per page to be 3
   const [selectedItem, setSelectedItem] = useState(null);
   const [pageNumbers, setPageNumbers] = useState(1);  //number of pages to start from 1
   const [showPopup, setShowPopup] = useState(false);
@@ -18,7 +18,7 @@ function Table() {
   const fetchData = async () => {
     try {
       const response = await axios.get(`${API_URL}/vehicle/${currentPage}/${itemsPerPage}`, config);
-      console.log(response,"response")
+      // console.log(response,"response")
       setData(response?.data?.data?.vehicles);   //populate the data array with the response data vehicles
       setPageNumbers(response?.data?.data?.totalPages);  //populate the pageNumbers array with the response data total pages
     } catch (error) {
