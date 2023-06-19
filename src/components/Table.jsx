@@ -64,7 +64,8 @@ function Table() {
         owner: updatedItem.owner._id,
       }, config);
       // console.log(response,"responseupdate")
-      const updatedData = data.map((item) => (item._id === updatedItem._id ? response.data : item));
+      const updatedData = data.map((item) => (item._id === updatedItem._id ? response.data.data.vehicle : item));
+      // console.log(updatedData,"upddata")
       setData(updatedData);
       handleModalClose();
       toast.success('Item updated successfully');
