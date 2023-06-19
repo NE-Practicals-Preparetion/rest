@@ -67,6 +67,7 @@ function Table() {
       const updatedData = data.map((item) => (item._id === updatedItem._id ? response.data : item));
       setData(updatedData);
       handleModalClose();
+      toast.success('Item updated successfully');
     } catch (error) {
       console.log(error);
       toast.error(error?.response?.data?.message || 'An error occurred while updating the item');
