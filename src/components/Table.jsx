@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { API_URL, config } from '../utils/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Table() {
   const [data, setData] = useState([]);
@@ -34,10 +36,12 @@ function Table() {
   // Handle delete action for an item
   const handleDelete = async (itemId) => {
     try {
-      await axios.delete(`${API_URL}/vehicle/${itemId}`);
+      await axios.delete(`${API_URL}/vehicle/${itemId}`,config);
       setData(data.filter((item) => item.id !== itemId));
+      toast.success('Item deleted successfully');
     } catch (error) {
       console.log(error);
+      toast.error(error?.response?.data?.message || 'An error occurred while deleting the item');
     }
   };
 
@@ -49,12 +53,23 @@ function Table() {
   // Save the changes made to an item
   const handleSave = async (updatedItem) => {
     try {
-      const response = await axios.put(`${API_URL}/vehicle/${updatedItem.id}`, updatedItem);
-      const updatedData = data.map((item) => (item.id === updatedItem.id ? response.data : item));
+      // console.log(updatedItem,"updatedItem")
+      const response = await axios.put(`${API_URL}/vehicle/${updatedItem._id}`, {
+        vehiclePlateNumber: updatedItem.vehiclePlateNumber,
+        manufactureCompany: updatedItem.manufactureCompany,
+        manufactureYear: updatedItem.manufactureYear,
+        price: updatedItem.price,
+        chasisNumber: updatedItem.chasisNumber,
+        modelName: updatedItem.modelName,
+        owner: updatedItem.owner._id,
+      }, config);
+      // console.log(response,"responseupdate")
+      const updatedData = data.map((item) => (item._id === updatedItem._id ? response.data : item));
       setData(updatedData);
       handleModalClose();
     } catch (error) {
       console.log(error);
+      toast.error(error?.response?.data?.message || 'An error occurred while updating the item');
     }
   };
 
@@ -116,6 +131,7 @@ function Table() {
 
   return (
     <div>
+        <ToastContainer />
       <div className="flex justify-between items-center">
         <p className="text-gray-500 text-sm font-semibold">
           History of Registered cars and their owners
@@ -153,7 +169,7 @@ function Table() {
                     <button className="text-blue-500 underline mr-2" onClick={() => handleEdit(item)}>
                       Edit
                     </button>
-                    <button className="text-red-500 underline" onClick={() => handleDelete(item.id)}>
+                    <button className="text-red-500 underline" onClick={() => handleDelete(item._id)}>
                       Delete
                     </button>
                   </td>
